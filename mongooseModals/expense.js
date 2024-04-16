@@ -5,6 +5,7 @@ const expenseModal = mongoose.Schema({
   reason: { type: String, require: true },
   date: { type: String, require: true },
   isFuel: { type: Number, require: true },
+  userName: { type: String, require: true },
 });
 
 module.exports = mongoose.model("expenseModal", expenseModal);

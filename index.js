@@ -101,7 +101,7 @@ app.post("/login", async (req, res) => {
 
 // adding expense
 app.post("/addExpense", async (req, res) => {
-  const { amount, reason, date, isFuel } = req.body;
+  const { amount, reason, date, isFuel, userName } = req.body;
 
   try {
     const expense = await expenseModal?.create({
@@ -109,8 +109,9 @@ app.post("/addExpense", async (req, res) => {
       reason,
       date,
       isFuel,
+      userName,
     });
-    // console.log(expense, "expense");
+
     res.status(200).json(expense);
   } catch (err) {
     res.status(210).json({ message: "Failed Atempt", status: 210 });
@@ -121,8 +122,12 @@ app.post("/addExpense", async (req, res) => {
 });
 
 app.get("/getAllExpenses", async (req, res) => {
+  console.log(req?.query?.userName, "reqreq");
+
   try {
-    const allExpenses = await expenseModal.find();
+    const allExpenses = await expenseModal.find({
+      userName: req?.query?.userName,
+    });
     res.status(200).json(allExpenses.reverse());
   } catch (err) {
     es.status(200).json({ message: err });
