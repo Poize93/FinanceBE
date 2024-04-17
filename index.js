@@ -6,6 +6,7 @@ const userModal = require("./mongooseModals/userDeetails");
 const expenseModal = require("./mongooseModals/expense");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
+const bankExpense = require("./mongooseModals/bankTransaction");
 var jwt = require("jsonwebtoken");
 
 const app = express();
@@ -134,4 +135,38 @@ app.get("/getAllExpenses", async (req, res) => {
     console.log(err);
   }
 });
+
+app.post("/addTransaction", async (req, res) => {
+  const { date, account, category, reason, amount, userName } = req.body;
+
+  try {
+    const expense = await bankExpense?.create({
+      date,
+      account,
+      category,
+      reason,
+      amount,
+      userName,
+    });
+
+    res.status(200).json(expense);
+    console.log(expense, "expense");
+  } catch (err) {
+    res.status(210).json({ message: "Failed Atempt", status: 210 });
+    console.log(err);
+  }
+});
+
+app.get("/getAllBankExpenses", async (req, res) => {
+  try {
+    const allExpenses = await bankExpense.find({
+      userName: req?.query?.userName,
+    });
+    res.status(200).json(allExpenses.reverse());
+  } catch (err) {
+    es.status(200).json({ message: err });
+    console.log(err);
+  }
+});
+
 app.listen(port, () => console.log(`Listeing to ${port}`));
